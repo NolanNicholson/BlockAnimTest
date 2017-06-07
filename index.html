@@ -1,0 +1,138 @@
+<html>
+<head>
+  <title>Pushing Blocks Around</title>
+</head>
+
+<body>
+  <h1 class="title">Hello World</h1>
+  <div class="cell" id="testTileHTML">
+    a
+  </div>
+  <span class="space" id="originCell"></span>
+  <span class="space"></span>
+</body>
+
+<style>
+body {
+  background: #ffffff;
+  color: #444444;
+  font-family: Arial, sans-serif;
+}
+.cell {
+  /*background: #cc4422;*/
+  background: rgba(255, 60, 30, 0.5);
+  color: #ffffff;
+  font-size: 48px;
+  border-radius: 10px;
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+  position: absolute;
+  /*-webkit-animation: test 1s;*/
+  top: 0;
+  left: 0;
+  -webkit-transition: 200ms ease-in-out;
+}
+.space {
+  background: #aa9999;
+  /*background: #cc4422;*/
+  color: #ffffff;
+  font-size: 48px;
+  border-radius: 10px;
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+  /*position: absolute;*/
+}
+/*@-webkit-keyframes aMoveR {
+  0% {top: 0; left: -100px;}
+  100% {top: 0; left: 0;}
+}
+@-webkit-keyframes aMoveL {
+  0% {top: 0; left: 100px;}
+  100% {top: 0; left: 0;}
+}*/
+</style>
+
+<script>
+class MobileTile {
+  constructor(x=0, y=0) {
+    this.x = x;
+    this.y = y;
+    // Only grabs this one HTML element for now, instead of making one
+    this.element = document.getElementById("testTileHTML");
+    const originRect = document.getElementById("originCell").getBoundingClientRect();
+    this.x0px = originRect.left;
+    this.y0px = originRect.top;
+    this.size = 100;
+    console.log("("+originRect.top.toString()+","+originRect.left.toString()+")")
+    // this.element.style.WebkitTransform = "translate("+originRect.left.toString()+"px,"+originRect.top.toString()+"px)"
+    this.actuate();
+  }
+  move(dx, dy) {
+    // Move by x grid positions right and y grid positions left
+    this.x += dx;
+    this.y += dy;
+    console.log(this.x);
+    this.actuate(dx, dy);
+  }
+  actuate(dx, dy) {
+    var s = this.element.style;
+    // var anim;
+    // switch (dx) {
+    //   case -1:
+    //     anim = "aMoveL 0.2s";
+    //     break;
+    //   case 1:
+    //     anim = "aMoveR 0.2s";
+    //     break;
+    // }
+    // s.WebkitAnimation = "none";
+    // setTimeout(function() {
+    //   s.WebkitAnimation = anim;
+    // })
+    var self = this;
+    window.requestAnimationFrame(function() {
+      // s.background = "rgba(0, 0, 0, 0.5)";
+      // s.WebkitTransform = "translate(100px, 100px)";
+      s.WebkitTransform = "translate("+(self.x0px + self.size*self.x).toString()+"px,"+(self.y0px + self.size*self.y).toString()+"px)";
+      // self.element.style.WebkitTransform = "translate("+(self.x0px + self.size*self.x).toString()+"px,"+(self.y0px + self.size*self.y).toString()+"px)";
+    });
+    }
+}
+
+const GameController = {
+  init() {
+    console.log("Hello World");
+    testTile = new MobileTile();
+    document.addEventListener('keydown', (event) => {
+      const keyName = event.key;
+      // console.log(keyName);
+      switch (keyName) {
+        case 'ArrowLeft':
+          testTile.move(-1, 0);
+          break;
+        case 'ArrowRight':
+          testTile.move(1, 0);
+          break;
+        case 'ArrowUp':
+          testTile.move(0, -1);
+          break;
+        case 'ArrowDown':
+          testTile.move(0, 1);
+          break;
+      }
+    });
+    },
+};
+
+addEventListener("load", () => {
+  GameController.init();
+});
+</script>
+
+</html>
